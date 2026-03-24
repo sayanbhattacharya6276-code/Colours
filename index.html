@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colours — Discover Beautiful Color Palettes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #FFFBF5;
+      --cream2: #FFF6E8;
+      --warm: #FDF0DC;
+      --sand: #F5E6CC;
+      --ink: #1C1410;
+      --ink2: #3D2E22;
+      --muted: #8A7060;
+      --border: #EAD9C4;
+      --border2: #DFC9AE;
+      --coral: #FF6B4A;
+      --teal: #2ABFBF;
+      --violet: #7C5CBF;
+      --gold: #F0A500;
+      --rose: #E8637A;
+      --sage: #5A9E6F;
+      --shadow-sm: 0 2px 8px rgba(60,30,10,0.07);
+      --shadow-md: 0 6px 24px rgba(60,30,10,0.10);
+      --shadow-lg: 0 16px 48px rgba(60,30,10,0.13);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* subtle dot pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(0, 0, 0, 0.288) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0.9rem 0;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    nav.scrolled {
+      background: rgba(255,251,245,0.92);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── Logo swatches: inline row ── */
+    .logo-swatches {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── IDLE: staggered swatchBounce ── */
+    .logo-swatch {
+      display: block;
+      width: 9px; height: 9px;
+      border-radius: 3px;
+      animation: swatchBounce 2.4s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+
+    .logo-swatch:nth-child(1) { background: #FF6B4A; animation-delay: 0s; }
+    .logo-swatch:nth-child(2) { background: #2ABFBF; animation-delay: 0.15s; }
+    .logo-swatch:nth-child(3) { background: #7C5CBF; animation-delay: 0.3s; }
+    .logo-swatch:nth-child(4) { background: #F0A500; animation-delay: 0.45s; }
+
+    @keyframes swatchBounce {
+      0%, 60%, 100% { transform: translateY(0)    scale(1);   border-radius: 3px; }
+      30%            { transform: translateY(-6px) scale(1.2); border-radius: 50%; }
+    }
+
+    /* ── Logo text: always shimmer ── */
+    .logo-text {
+      background: linear-gradient(90deg, var(--ink) 0%, var(--coral) 35%, var(--violet) 65%, var(--ink) 100%);
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: logoShimmer 4s linear infinite;
+    }
+
+    @keyframes logoShimmer {
+      0%   { background-position: 250% center; }
+      100% { background-position: -250% center; }
+    }
+
+    /* ── HOVER idle: speed boost + glow ── */
+    .logo:hover .logo-swatch:nth-child(1) { animation: swatchBounce 0.6s ease-in-out infinite 0s,    swatchGlow1 0.6s ease-in-out infinite 0s; }
+    .logo:hover .logo-swatch:nth-child(2) { animation: swatchBounce 0.6s ease-in-out infinite 0.1s,  swatchGlow2 0.6s ease-in-out infinite 0.1s; }
+    .logo:hover .logo-swatch:nth-child(3) { animation: swatchBounce 0.6s ease-in-out infinite 0.2s,  swatchGlow3 0.6s ease-in-out infinite 0.2s; }
+    .logo:hover .logo-swatch:nth-child(4) { animation: swatchBounce 0.6s ease-in-out infinite 0.3s,  swatchGlow4 0.6s ease-in-out infinite 0.3s; }
+
+    @keyframes swatchGlow1 { 30% { box-shadow: 0 0 8px 3px rgba(255,107,74,0.75); } }
+    @keyframes swatchGlow2 { 30% { box-shadow: 0 0 8px 3px rgba(42,191,191,0.75); } }
+    @keyframes swatchGlow3 { 30% { box-shadow: 0 0 8px 3px rgba(124,92,191,0.75); } }
+    @keyframes swatchGlow4 { 30% { box-shadow: 0 0 8px 3px rgba(240,165,0,0.75);  } }
+
+    /* ── HOVER (is-hovered): Google-style circular orbit ── */
+    .logo.is-hovered .logo-swatches {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      gap: 0;
+    }
+
+    .logo.is-hovered .logo-swatch {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      border-radius: 50% !important;
+      box-shadow: none !important;
+      animation: orbitSpin 1.2s linear infinite !important;
+    }
+
+    .logo.is-hovered .logo-swatch:nth-child(1) { --sa: 0deg;   animation-delay:    0s !important; }
+    .logo.is-hovered .logo-swatch:nth-child(2) { --sa: 90deg;  animation-delay: -0.3s !important; }
+    .logo.is-hovered .logo-swatch:nth-child(3) { --sa: 180deg; animation-delay: -0.6s !important; }
+    .logo.is-hovered .logo-swatch:nth-child(4) { --sa: 270deg; animation-delay: -0.9s !important; }
+
+    @keyframes orbitSpin {
+      from { transform: translate(-50%,-50%) rotate(var(--sa))              translateX(12px); }
+      to   { transform: translate(-50%,-50%) rotate(calc(var(--sa) + 360deg)) translateX(12px); }
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -3px;
+      width: 0; height: 2px;
+      background: var(--coral);
+      border-radius: 2px;
+      transition: width 0.25s;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+    .btn-outline {
+      padding: 0.5rem 1.2rem;
+      background: transparent;
+      border: 1.5px solid var(--border2);
+      border-radius: 100px;
+      color: var(--ink2);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-outline:hover {
+      background: var(--warm);
+      border-color: var(--coral);
+      color: var(--coral);
+    }
+
+    .btn-fill {
+      padding: 0.5rem 1.3rem;
+      background: var(--ink);
+      border: none;
+      border-radius: 100px;
+      color: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.22s;
+      text-decoration: none;
+    }
+
+    .btn-fill:hover {
+      background: var(--coral);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255,107,74,0.3);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 62px; left: 0; right: 0;
+      background: rgba(255,251,245,0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      z-index: 99;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 1rem; font-weight: 600; padding: 0.4rem 0; }
+    .mobile-menu a:hover { color: var(--coral); }
+    .mobile-menu .btn-fill, .mobile-menu .btn-outline { text-align: center; width: 100%; padding: 0.75rem; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 0 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* floating color blobs */
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      pointer-events: none;
+      opacity: 0.55;
+    }
+
+    .blob-1 { width: 420px; height: 420px; background: #FFD4C2; top: -80px; right: -100px; animation: blobFloat 9s ease-in-out infinite alternate; }
+    .blob-2 { width: 300px; height: 300px; background: #C2F0EE; bottom: 0; left: -60px; animation: blobFloat 11s ease-in-out infinite alternate-reverse; }
+    .blob-3 { width: 200px; height: 200px; background: #FFF0A0; top: 40%; left: 40%; animation: blobFloat 7s ease-in-out infinite alternate; }
+
+    @keyframes blobFloat {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(20px, 15px) scale(1.06); }
+    }
+
+    .hero-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .hero-left {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      font-weight: 400;
+      max-width: 440px;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.5s 0.16s ease both;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--warm);
+      border: 1.5px solid var(--border2);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .hero-eyebrow-dot {
+      width: 7px; height: 7px;
+      background: var(--coral);
+      border-radius: 50%;
+    }
+
+    /* TYPING HEADLINE */
+    .hero-headline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.5s 0.08s ease both;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.9em;
+      background: var(--coral);
+      border-radius: 2px;
+      margin-left: 3px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.5s 0.24s ease both;
+    }
+
+    .btn-hero {
+      padding: 0.85rem 2rem;
+      background: var(--coral);
+      border: none;
+      border-radius: 100px;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.22s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-hero:hover {
+      background: #e85a3a;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(255,107,74,0.35);
+    }
+
+    .btn-hero-ghost {
+      padding: 0.85rem 2rem;
+      background: var(--warm);
+      border: 1.5px solid var(--border2);
+      border-radius: 100px;
+      color: var(--ink2);
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.22s;
+      text-decoration: none;
+    }
+
+    .btn-hero-ghost:hover {
+      background: var(--sand);
+      border-color: var(--ink2);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── SECTION COMMONS ─── */
+    section { padding: 6rem 0; position: relative; z-index: 1; }
+
+    .section-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--warm);
+      border: 1.5px solid var(--border2);
+      border-radius: 100px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--coral);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 0.85rem;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 0.85rem;
+    }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 400;
+      line-height: 1.75;
+      max-width: 480px;
+    }
+
+    /* ─── FEATURES ─── */
+    .features { background: var(--cream2); }
+
+    .features-header { text-align: center; margin-bottom: 4rem; }
+    .features-header .section-desc { margin: 0 auto; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .feat-card {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 2rem 1.75rem;
+      transition: all 0.3s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--coral), #ffb347); }
+    .feat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--teal), #7dd6d6); }
+    .feat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--violet), #c09ee8); }
+    .feat-card:nth-child(4)::before { background: linear-gradient(90deg, var(--gold), #ffe085); }
+    .feat-card:nth-child(5)::before { background: linear-gradient(90deg, var(--rose), #f9a8b5); }
+    .feat-card:nth-child(6)::before { background: linear-gradient(90deg, var(--sage), #a3d6b0); }
+
+    .feat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+      border-color: transparent;
+    }
+
+    .feat-card:hover::before { opacity: 1; }
+
+    .feat-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .feat-card:nth-child(1) .feat-icon { background: #FFF0EB; }
+    .feat-card:nth-child(2) .feat-icon { background: #E8F9F9; }
+    .feat-card:nth-child(3) .feat-icon { background: #F2EDFA; }
+    .feat-card:nth-child(4) .feat-icon { background: #FFF8E1; }
+    .feat-card:nth-child(5) .feat-icon { background: #FDE8EC; }
+    .feat-card:nth-child(6) .feat-icon { background: #EBF5EE; }
+
+    .feat-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .feat-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.65; font-weight: 400; }
+
+    /* ─── HOW IT WORKS ─── */
+    .hiw { background: var(--warm); }
+
+    .hiw-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .hiw-steps { display: flex; flex-direction: column; gap: 0; }
+
+    .hiw-step {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: default;
+      transition: all 0.2s;
+    }
+
+    .hiw-step:last-child { border-bottom: none; }
+
+    .hiw-step:hover .hiw-num { background: var(--coral); color: #fff; border-color: var(--coral); }
+
+    .hiw-num {
+      width: 38px; height: 38px;
+      background: #fff;
+      border: 1.5px solid var(--border2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--ink2);
+      flex-shrink: 0;
+      transition: all 0.25s;
+    }
+
+    .hiw-step-text h4 {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.01em;
+    }
+
+    .hiw-step-text p { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
+
+    /* palette browser mockup */
+    .hiw-visual {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hiw-visual-bar {
+      background: var(--cream2);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hiw-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    .hiw-url {
+      flex: 1;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .hiw-palette-list { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .hiw-palette-row {
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      display: flex;
+      height: 44px;
+      transition: all 0.2s;
+    }
+
+    .hiw-palette-row:hover { transform: scale(1.01); box-shadow: var(--shadow-sm); }
+    .hiw-palette-row span { flex: 1; }
+
+    /* ─── STATS ─── */
+    .stats-bar {
+      background: var(--ink);
+      padding: 3rem 0;
+    }
+
+    .stats-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Fraunces', serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .stat-unit { color: var(--coral); }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.45);
+      font-weight: 500;
+      margin-top: 0.4rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── DEMO ─── */
+    .demo { background: var(--cream2); }
+
+    .demo-header { text-align: center; margin-bottom: 4rem; }
+    .demo-header .section-desc { margin: 0 auto; }
+
+    .demo-browser {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .demo-browser-bar {
+      background: var(--cream2);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .demo-dots { display: flex; gap: 6px; }
+    .demo-dot-r { width: 11px; height: 11px; border-radius: 50%; background: #FF5F57; }
+    .demo-dot-y { width: 11px; height: 11px; border-radius: 50%; background: #FFBD2E; }
+    .demo-dot-g { width: 11px; height: 11px; border-radius: 50%; background: #28CA41; }
+
+    .demo-url-bar {
+      flex: 1;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .demo-content {
+      padding: 2rem;
+    }
+
+    /* filter tabs */
+    .demo-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+
+    .demo-tab {
+      padding: 0.35rem 1rem;
+      background: var(--cream2);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .demo-tab.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    .demo-tab:hover:not(.active) {
+      border-color: var(--ink2);
+      color: var(--ink);
+    }
+
+    /* palette grid inside demo */
+    .demo-palette-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .demo-palette-item {
+      border: 1.5px solid var(--border);
+      border-radius: 0.85rem;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .demo-palette-item:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: transparent;
+    }
+
+    .demo-palette-colors { display: flex; height: 48px; }
+    .demo-palette-colors span { flex: 1; }
+
+    .demo-palette-info {
+      padding: 0.6rem 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .demo-palette-info span:first-child {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--ink2);
+    }
+
+    .demo-palette-info span:last-child {
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .demo-cta-wrap {
+      text-align: center;
+      margin-top: 2.5rem;
+    }
+
+    /* ─── FAQ ─── */
+    .faq-header { text-align: center; margin-bottom: 3.5rem; }
+    .faq-header .section-desc { margin: 0 auto; }
+
+    .faq-list {
+      max-width: 740px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .faq-item {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    .faq-q {
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--ink);
+      gap: 1rem;
+      transition: background 0.2s;
+    }
+
+    .faq-q:hover { background: var(--cream2); }
+
+    .faq-toggle {
+      width: 24px; height: 24px;
+      background: var(--warm);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .faq-item.open .faq-toggle { background: var(--coral); color: #fff; transform: rotate(45deg); }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .faq-item.open .faq-a { max-height: 300px; padding: 0 1.5rem 1.25rem; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ink);
+      padding: 4rem 0 2rem;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand .logo { color: #fff; }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.4);
+      font-weight: 400;
+      margin-top: 0.75rem;
+      max-width: 260px;
+      line-height: 1.7;
+    }
+
+    .footer-col h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 1.1rem;
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer-col ul a {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul a:hover { color: var(--coral); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.3); }
+
+    .footer-socials { display: flex; gap: 0.6rem; }
+
+    .social-btn {
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .social-btn:hover { background: var(--coral); color: #fff; }
+
+    /* ─── REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ─── RESPONSIVE ─── */
+    /* ── Blob Shape ──────────────────────────────────────────────── */
+    .blob-container {
+      position: relative;
+      width: 400px; height: 400px;
+      margin: 0 auto;
+    }
+
+    .blob-container.small {
+      width: 320px; height: 320px;
+    }
+
+    .blob-shape {
+      position: absolute; inset: 0;
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      background: linear-gradient(135deg, var(--coral), var(--gold), var(--violet));
+      animation: morphBlob 8s ease-in-out infinite;
+      overflow: hidden;
+    }
+
+    .blob-glow {
+      position: absolute; inset: -6px;
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      background: linear-gradient(135deg, var(--coral), var(--violet));
+      animation: morphBlob 8s ease-in-out infinite, rotateHue 12s linear infinite;
+      z-index: 0;
+      filter: blur(4px);
+      opacity: 0.85;
+    }
+
+    .blob-shape img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: inherit;
+      mix-blend-mode: normal;
+      opacity: 1;
+      display: block;
+      z-index: 2;
+    }
+
+    @keyframes morphBlob {
+      0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+      25%  { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+      50%  { border-radius: 50% 50% 40% 60% / 40% 70% 60% 30%; }
+      75%  { border-radius: 40% 60% 60% 40% / 70% 30% 50% 50%; }
+      100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    }
+
+    @keyframes rotateHue {
+      0%   { filter: blur(4px) hue-rotate(0deg); }
+      100% { filter: blur(4px) hue-rotate(360deg); }
+    }
+
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-right { display: grid; grid-template-columns: 1fr 1fr; }
+      .hiw-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.08); }
+      .demo-palette-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-actions { display: none; }
+      .hamburger { display: flex; }
+      .features-grid { grid-template-columns: 1fr; }
+      .demo-palette-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr; }
+      .hero-right { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2.2rem; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-swatches">
+          <div class="logo-swatch"></div>
+          <div class="logo-swatch"></div>
+          <div class="logo-swatch"></div>
+          <div class="logo-swatch"></div>
+        </div>
+        <span class="logo-text">Colours</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#about-dev">About</a></li>
+        <li><a href="#demo">Demo</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#features">Features</a>
+    <a href="#about-dev">About</a>
+    <a href="#demo">Demo</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-blob blob-1"></div>
+    <div class="hero-blob blob-2"></div>
+    <div class="hero-blob blob-3"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="hero-eyebrow">
+            <div class="hero-eyebrow-dot"></div>
+            Presented by ByteByBuddy
+          </div>
+          <h1 class="hero-headline" id="typing-headline"><span class="typing-cursor"></span></h1>
+          <p class="hero-sub">
+            Explore thousands of hand-picked color palettes. Save your favourites, upload image to extract colours, and build with colours that inspire.
+          </p>
+          <div class="hero-ctas">
+            <a href="palettes.html" class="btn-hero">Browse Palettes </a>
+            <a href="color-picker.html" class="btn-hero-ghost">Upload Image to find colors</a>
+            <a href="converter.html" class="btn-hero">Converter </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="features-header reveal">
+        <div class="section-chip">✦ Features</div>
+        <h2 class="section-title">Everything a colour lover needs</h2>
+        <p class="section-desc">Colours is built for designers, developers, and anyone obsessed with beautiful colour.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card reveal">
+          <div class="feat-icon">🎨</div>
+          <h3>Curated Picks</h3>
+          <p>Fresh palettes hand-picked by me — no clutter, only quality.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">⚡</div>
+          <h3>One-Click Copy</h3>
+          <p>Copy any combos value instantly. Paste straight into Figma, VS Code, or your browser.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">🔖</div>
+          <h3>Save Collections</h3>
+          <p>Bookmark your favourite palettes into personal collections and access them anywhere, any time.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">🎲</div>
+          <h3>Free to use</h3>
+          <p>No login, subscription needed </p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">🖼️</div>
+          <h3>Extract from Image</h3>
+          <p>Upload any photo and instantly extract colour palette from it.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">🌿</div>
+          <h3>Accessibility Check</h3>
+          <p>Every palette is rated for WCAG contrast compliance so your designs work for everyone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-inner">
+        <div class="stat-item reveal">
+          <div class="stat-num" data-target="500">0<span class="stat-unit">+</span></div>
+          <div class="stat-label">Palettes available</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-num" data-target="250">0<span class="stat-unit">+</span></div>
+          <div class="stat-label">Dual Colours</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-num" data-target="250">0<span class="stat-unit">+</span></div>
+          <div class="stat-label">Multi Colours</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-num" data-target="0">0<span class="stat-unit"></span></div>
+          <div class="stat-label">Cost</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="hiw" id="how-it-works">
+    <div class="container">
+      <div class="hiw-inner">
+        <div>
+          <div class="reveal">
+            <div class="section-chip">✦ How it works</div>
+            <h2 class="section-title">Pick, copy, and create in seconds</h2>
+            <p class="section-desc">Colours fits into your design workflow without friction. Here's all you need to know.</p>
+          </div>
+          <div class="hiw-steps reveal">
+            <div class="hiw-step">
+              <div class="hiw-num">1</div>
+              <div class="hiw-step-text">
+                <h4>Browse or Search</h4>
+                <p>Filter palettes by mood, style, season, or hex code. Find the one that clicks.</p>
+              </div>
+            </div>
+            <div class="hiw-step">
+              <div class="hiw-num">2</div>
+              <div class="hiw-step-text">
+                <h4>Preview & Compare</h4>
+                <p>See palettes rendered on real UI components — buttons, cards, headers — before you commit.</p>
+              </div>
+            </div>
+            <div class="hiw-step">
+              <div class="hiw-num">3</div>
+              <div class="hiw-step-text">
+                <h4>Copy in HEX Format</h4>
+                <p>Grab HEX One click and it's on your clipboard.</p>
+              </div>
+            </div>
+            <div class="hiw-step">
+              <div class="hiw-num">4</div>
+              <div class="hiw-step-text">
+                <h4>Save & Share</h4>
+                <p>Organise palettes into collections and share a link with your team or the community.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hiw-visual reveal">
+          <div class="hiw-visual-bar">
+            <div class="hiw-dot" style="background:#FF5F57;"></div>
+            <div class="hiw-dot" style="background:#FFBD2E;"></div>
+            <div class="hiw-dot" style="background:#28CA41;"></div>
+            <div class="hiw-url">Colours.co/browse</div>
+          </div>
+          <div class="hiw-palette-list">
+            <div class="hiw-palette-row">
+              <span style="background:#A8DADC;"></span>
+              <span style="background:#457B9D;"></span>
+              <span style="background:#1D3557;"></span>
+              <span style="background:#E63946;"></span>
+              <span style="background:#F1FAEE;"></span>
+            </div>
+            <div class="hiw-palette-row">
+              <span style="background:#FFBE0B;"></span>
+              <span style="background:#FB5607;"></span>
+              <span style="background:#FF006E;"></span>
+              <span style="background:#8338EC;"></span>
+              <span style="background:#3A86FF;"></span>
+            </div>
+            <div class="hiw-palette-row">
+              <span style="background:#D8F3DC;"></span>
+              <span style="background:#95D5B2;"></span>
+              <span style="background:#52B788;"></span>
+              <span style="background:#2D6A4F;"></span>
+              <span style="background:#1B4332;"></span>
+            </div>
+            <div class="hiw-palette-row">
+              <span style="background:#FFCDB2;"></span>
+              <span style="background:#FFB4A2;"></span>
+              <span style="background:#E5989B;"></span>
+              <span style="background:#B5838D;"></span>
+              <span style="background:#6D6875;"></span>
+            </div>
+            <div class="hiw-palette-row">
+              <span style="background:#F8F9FA;"></span>
+              <span style="background:#E9ECEF;"></span>
+              <span style="background:#ADB5BD;"></span>
+              <span style="background:#495057;"></span>
+              <span style="background:#212529;"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section class="demo" id="demo">
+    <div class="container">
+      <div class="demo-header reveal">
+        <div class="section-chip">✦ Live Demo</div>
+        <h2 class="section-title">See Colours in action</h2>
+        <p class="section-desc">Explore a live preview of the browsing experience — filter, hover, and copy in real time.</p>
+      </div>
+
+      <div class="demo-browser reveal">
+        <div class="demo-browser-bar">
+          <div class="demo-dots">
+            <div class="demo-dot-r"></div>
+            <div class="demo-dot-y"></div>
+            <div class="demo-dot-g"></div>
+          </div>
+          <div class="demo-url-bar">Colours.co/browse</div>
+        </div>
+        <div class="demo-content">
+          <div class="demo-tabs">
+            <div class="demo-tab active" onclick="setTab(this,'new')">New</div>
+            <div class="demo-tab" onclick="setTab(this,'popular')">Popular</div>
+            <div class="demo-tab" onclick="setTab(this,'warm')">Warm</div>
+            <div class="demo-tab" onclick="setTab(this,'cool')">Cool</div>
+            <div class="demo-tab" onclick="setTab(this,'nature')">Nature</div>
+            <div class="demo-tab" onclick="setTab(this,'pastel')">Pastel</div>
+          </div>
+          <div class="demo-palette-grid" id="demoGrid">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-cta-wrap reveal">
+        <a href="palettes.html" class="btn-hero">Explore all palettes →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="faq-header reveal">
+        <div class="section-chip">✦ FAQ</div>
+        <h2 class="section-title">Common questions</h2>
+        <p class="section-desc">Everything you need to know about Colours before you dive in.</p>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item">
+          <div class="faq-q">Is Colours free to use? <div class="faq-toggle">+</div></div>
+          <div class="faq-a">Yes! Browsing and copying palettes is completely free. We offer a Pro plan for unlimited collections, team sharing, and image extraction.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can I save my fav palettes? <div class="faq-toggle">+</div></div>
+          <div class="faq-a">Absolutely. Any user can save palettes.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What formats can I export colours in? <div class="faq-toggle">+</div></div>
+          <div class="faq-a">We support HEX Format, but you can use our HEX to any converter in this website.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Do you have a image colour extractor? <div class="faq-toggle">+</div></div>
+          <div class="faq-a">Yes! we have in Colours collections.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Easy to use <div class="faq-toggle">+</div></div>
+          <div class="faq-a">Absolutely.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT DEV -->
+  <section id="about-dev" style="background: var(--warm);">
+    <div class="container">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center;">
+        <!-- left: text -->
+        <div class="reveal">
+          <div class="section-chip">✦ About the Dev</div>
+          <h2 class="section-title">Built by Sayan Bhattacharya</h2>
+          <p class="section-desc" style="margin-bottom:1.5rem;">
+            Colours is crafted with love by <strong style="color:var(--ink);">ByteByBuddy</strong> — a developer passionate about design tools, colour theory, and building things that make creative work feel effortless.
+          </p>
+          <p class="section-desc" style="margin-bottom:2rem;">
+            This project was born from a simple frustration: finding great colour palettes shouldn't be hard. So we built the tool we always wished existed.
+          </p>
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <a href="https://github.com/sayanbhattacharya6276-code" class="btn-hero" style="font-size:0.875rem; padding:0.65rem 1.5rem;">Follow on GitHub →</a>
+            <a href="mailto:sayanbhattacharya6276@gmail.com" class="btn-hero-ghost" style="font-size:0.875rem; padding:0.65rem 1.5rem; display:inline-flex; align-items:center; gap:0.4rem;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 6C2 4.9 2.9 4 4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M2 6L12 13L22 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Gmail
+            </a>
+            <a href="#" class="btn-hero-ghost" style="font-size:0.875rem; padding:0.65rem 1.5rem; display:inline-flex; align-items:center; gap:0.4rem; background:var(--ink); color:var(--cream); border-color:var(--ink);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor"/>
+                <rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor"/>
+                <rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor"/>
+                <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor"/>
+              </svg>
+              Portfolio ↗
+            </a>
+          </div>
+        </div>
+        <!-- right: blob photo -->
+        <div class="reveal" style="display:flex; justify-content:center; align-items:center;">
+          <div class="blob-container">
+            <div class="blob-glow"></div>
+            <div class="blob-shape">
+              <!-- 📸 TO REPLACE: put your photo named sayan.png in the same folder or update the src -->
+              <img src="sayan.png" alt="ByteByBuddy" />
+            </div>
+            <div style="position:absolute;inset:-20px;border-radius:inherit;border:2px dashed rgba(255,107,74,0.3);animation:morphBlob 8s ease-in-out infinite;pointer-events:none;z-index:3;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <div class="logo-swatches">
+              <div class="logo-swatch"></div>
+              <div class="logo-swatch"></div>
+              <div class="logo-swatch"></div>
+              <div class="logo-swatch"></div>
+            </div>
+            <span class="logo-text">Colours </span>
+          </a>
+          <p>A grove of colour, endlessly growing. Discover, save, and share palettes that spark creativity.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Browse</a></li>
+            <li><a href="#">Generator</a></li>
+            <li><a href="#">Collections</a></li>
+            <li><a href="#">Extension</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="#">Submit Palette</a></li>
+            <li><a href="#">Trending</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Colours. All rights reserved.</p>
+        <div class="footer-socials">
+          <a href="www.linkedin.com/in/sayan-bhattacharya-094b4a3b1" class="social-btn" aria-label="LinkedIn">in</a>
+          <a href="https://github.com/sayanbhattacharya6276-code" class="social-btn" aria-label="Twitter">G</a>
+          <a href="https://github.com/sayanbhattacharya6276-code" class="social-btn" aria-label="GitHub">⌥</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Logo hover animation toggle
+    document.querySelectorAll('.logo').forEach(logo => {
+      logo.addEventListener('mouseenter', () => logo.classList.add('is-hovered'));
+      logo.addEventListener('mouseleave', () => logo.classList.remove('is-hovered'));
+    });
+
+    // ── Sticky nav
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 20));
+
+    // ── Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+    // ── Typing animation
+    const phrases = [
+      'Welcome to Colours',
+      'Discover beautiful colour palettes',
+      'Upload image to extract colours',
+      'Inspire your next design.'
+    ];
+    let phraseIndex = 0, charIndex = 0, deleting = false;
+    const el = document.getElementById('typing-headline');
+
+    function type() {
+      const current = phrases[phraseIndex];
+      const cursor = '<span class="typing-cursor"></span>';
+      if (!deleting) {
+        charIndex++;
+        el.innerHTML = current.substring(0, charIndex) + cursor;
+        if (charIndex === current.length) {
+          deleting = true;
+          setTimeout(type, 2000);
+          return;
+        }
+      } else {
+        charIndex--;
+        el.innerHTML = current.substring(0, charIndex) + cursor;
+        if (charIndex === 0) {
+          deleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+        }
+      }
+      setTimeout(type, deleting ? 45 : 85);
+    }
+    type();
+
+    // ── Scroll reveal
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // ── FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.closest('.faq-item');
+        const open = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!open) item.classList.add('open');
+      });
+    });
+
+    // ── Animated counters
+    function animCount(el, target, isFloat) {
+      const dur = 1600, start = performance.now();
+      const suffix = el.querySelector('.stat-unit').outerHTML;
+      (function tick(now) {
+        const t = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        const val = isFloat ? (target * ease).toFixed(1) : Math.round(target * ease);
+        el.innerHTML = (isFloat ? val : val.toLocaleString()) + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      })(start);
+    }
+
+    const cntObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const el = e.target, tgt = parseFloat(el.dataset.target);
+          animCount(el, tgt, !Number.isInteger(tgt));
+          cntObs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-num[data-target]').forEach(el => cntObs.observe(el));
+
+    // ── Demo palette grid data
+    const palettes = {
+      new: [
+        { name:'Sunrise Haze', likes:'342', colors:['#FFD6A5','#FFADAD','#FFC6FF','#CAFFBF','#9BF6FF'] },
+        { name:'Rust & Stone', likes:'218', colors:['#8B4513','#CD853F','#DEB887','#F5DEB3','#FAF0E6'] },
+        { name:'Midnight Pop', likes:'594', colors:['#03045E','#0077B6','#00B4D8','#90E0EF','#CAF0F8'] },
+        { name:'Spring Bloom', likes:'411', colors:['#FFDDE1','#FFB3C1','#FF85A1','#FF4D6D','#C9184A'] },
+        { name:'Sage & Ivory', likes:'276', colors:['#F1F7EE','#D0E8C0','#A8C58A','#72A550','#4A7A30'] },
+        { name:'Candy Brights', likes:'503', colors:['#FF6B6B','#FFE66D','#4ECDC4','#A8E6CF','#FF8B94'] },
+        { name:'Ocean Mist', likes:'389', colors:['#E8F4FD','#BEE3F8','#90CDF4','#63B3ED','#3182CE'] },
+        { name:'Desert Sand', likes:'155', colors:['#FFF9F0','#F5E6C8','#E8C99A','#D4A96A','#B8854A'] },
+      ],
+      popular: [
+        { name:'Classic Navy', likes:'2.1k', colors:['#0A1628','#1E3A5F','#2E6DA4','#7FB3D3','#C8E6F5'] },
+        { name:'Retro Arcade', likes:'1.8k', colors:['#FF0066','#FF6600','#FFCC00','#00CC99','#0066FF'] },
+        { name:'Soft Pastels', likes:'1.5k', colors:['#FFE5E5','#E5F3FF','#E5FFE5','#FFF5E5','#F5E5FF'] },
+        { name:'Bold Contrast', likes:'1.3k', colors:['#000000','#FF4136','#FFFFFF','#FFD700','#0074D9'] },
+        { name:'Earthy Tones', likes:'1.1k', colors:['#3D2B1F','#7B4F30','#B87333','#D4A96A','#F5DEB3'] },
+        { name:'Neon Dreams', likes:'980', colors:['#0D0D0D','#FF00FF','#00FFFF','#FF0077','#7700FF'] },
+        { name:'Nordic Cool', likes:'856', colors:['#E8EFF7','#B0C4DE','#6A8FB5','#3A5F8A','#1A3252'] },
+        { name:'Tropical Punch', likes:'744', colors:['#FF7043','#FF9800','#FFEB3B','#4CAF50','#009688'] },
+      ],
+      warm: [
+        { name:'Autumn Embers', likes:'621', colors:['#FF6B35','#F7C59F','#EFEFD0','#004E89','#1A936F'] },
+        { name:'Cinnamon Spice', likes:'448', colors:['#6B2D0F','#A0522D','#CD853F','#DEB887','#FFECD2'] },
+        { name:'Blush & Peach', likes:'537', colors:['#FF9A9E','#FECFEF','#FEADA6','#F5CBA7','#FFF5CC'] },
+        { name:'Terracotta', likes:'392', colors:['#4A1942','#C77737','#E09B62','#F2C07E','#FAEBD7'] },
+        { name:'Campfire', likes:'284', colors:['#1C0A00','#6E260E','#C35214','#E87040','#F5C07A'] },
+        { name:'Warm Caramel', likes:'315', colors:['#3D1C02','#7A3B07','#BF7130','#D4A25A','#F5E0B5'] },
+        { name:'Rose Quartz', likes:'490', colors:['#F9E4E4','#F2BDBD','#E88C8C','#D45A5A','#B02E2E'] },
+        { name:'Honey Gold', likes:'207', colors:['#FFF8DC','#FFD700','#FFA500','#FF8C00','#8B4513'] },
+      ],
+      cool: [
+        { name:'Glacial Blue', likes:'712', colors:['#E0F4FF','#B3E0FF','#66C2FF','#1A8FFF','#004C99'] },
+        { name:'Lavender Fog', likes:'583', colors:['#F3E8FF','#DCC6F0','#B589D6','#8B3FC8','#5A1A8C'] },
+        { name:'Teal Depths', likes:'449', colors:['#E0F7FA','#80DEEA','#26C6DA','#00838F','#004D40'] },
+        { name:'Storm Cloud', likes:'356', colors:['#ECEFF1','#90A4AE','#546E7A','#263238','#0D1B2A'] },
+        { name:'Periwinkle', likes:'294', colors:['#E8EAF6','#9FA8DA','#5C6BC0','#283593','#0D1B70'] },
+        { name:'Icy Mint', likes:'417', colors:['#F0FFF4','#C6F6D5','#68D391','#38A169','#1C5631'] },
+        { name:'Arctic Dawn', likes:'528', colors:['#EDF2FF','#BAC8FF','#74A0FD','#3B5BDB','#1971C2'] },
+        { name:'Deep Sea', likes:'633', colors:['#000D1A','#003366','#006699','#00AACC','#00CCEE'] },
+      ],
+      nature: [
+        { name:'Forest Floor', likes:'834', colors:['#1B4332','#2D6A4F','#52B788','#95D5B2','#D8F3DC'] },
+        { name:'Golden Field', likes:'612', colors:['#FFF9C4','#FFF176','#FFEE58','#F9A825','#E65100'] },
+        { name:'Mountain Dew', likes:'479', colors:['#E8F5E9','#A5D6A7','#66BB6A','#388E3C','#1B5E20'] },
+        { name:'Wildflower', likes:'355', colors:['#F8BBD0','#CE93D8','#90CAF9','#A5D6A7','#FFCC80'] },
+        { name:'Rocky Shore', likes:'290', colors:['#ECEFF1','#B0BEC5','#78909C','#546E7A','#37474F'] },
+        { name:'Sunset Beach', likes:'741', colors:['#FF6B6B','#FFD93D','#6BCB77','#4D96FF','#C77DFF'] },
+        { name:'Moss & Stone', likes:'413', colors:['#FAFAFA','#C8D5B9','#8FC0A9','#68B0AB','#4A7C59'] },
+        { name:'Overcast Sky', likes:'238', colors:['#F5F5F5','#E0E0E0','#9E9E9E','#616161','#212121'] },
+      ],
+      pastel: [
+        { name:'Cotton Candy', likes:'924', colors:['#FFAFCC','#BDE0FE','#CDB4DB','#A2D2FF','#FFCFD2'] },
+        { name:'Ice Cream', likes:'771', colors:['#FFF0F3','#FFCCD5','#FFB3C1','#FF85A1','#FF4D6D'] },
+        { name:'Soft Rainbow', likes:'649', colors:['#FFD6A5','#FDFFB6','#CAFFBF','#9BF6FF','#A0C4FF'] },
+        { name:'Baby Shower', likes:'503', colors:['#E2F4FB','#C5E8F7','#A8DCF3','#8BCDEF','#6EC1EB'] },
+        { name:'Macaron', likes:'418', colors:['#F7C5CC','#FDDCB5','#FFF3B0','#C1E1C1','#B5D5F5'] },
+        { name:'Petal Soft', likes:'344', colors:['#FDE2E4','#FAD2E1','#DBCDF0','#C5E6D8','#DCF0C5'] },
+        { name:'Morning Haze', likes:'289', colors:['#FFF9F0','#FFF0D9','#FFE8C2','#FFDCA8','#FFD08F'] },
+        { name:'Dreamy Hues', likes:'672', colors:['#E8D5E4','#D5C5E0','#C5D5E4','#C5E0D5','#D5E0C5'] },
+      ]
+    };
+
+    function renderDemoGrid(key) {
+      const grid = document.getElementById('demoGrid');
+      const data = palettes[key] || palettes.new;
+      grid.innerHTML = data.map(p => `
+        <div class="demo-palette-item">
+          <div class="demo-palette-colors">
+            ${p.colors.map(c => `<span style="background:${c};"></span>`).join('')}
+          </div>
+          <div class="demo-palette-info">
+            <span>${p.name}</span>
+            <span>♥ ${p.likes}</span>
+          </div>
+        </div>`).join('');
+    }
+
+    function setTab(el, key) {
+      document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      renderDemoGrid(key);
+    }
+
+    renderDemoGrid('new');
+
+    // smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    });
+  </script>
+</body>
+</html>

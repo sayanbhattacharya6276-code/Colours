@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Image Color Picker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f0ede8;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2ddd7;
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.9) inset;
+    }
+
+    .canvas-wrap {
+      background:
+        repeating-conic-gradient(#e8e3dc 0% 25%, #f5f2ee 0% 50%)
+        0 0 / 18px 18px;
+      border: 1.5px solid #ddd8d0;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    #lens {
+      box-shadow:
+        0 0 0 2.5px #1a1a1a,
+        0 0 0 4.5px rgba(255,255,255,0.8),
+        0 12px 32px rgba(0,0,0,0.18);
+    }
+
+    .upload-btn {
+      background: #1a1a1a;
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .upload-btn:hover { background: #2e2e2e; }
+    .upload-btn:active { transform: scale(0.97); }
+
+    .copy-btn {
+      background: #f5f2ee;
+      border: 1px solid #ddd8d0;
+      border-radius: 9px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+      color: #555;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: #ece7df; border-color: #c8c0b5; }
+
+    .palette-item {
+      position: relative;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .palette-item:hover { transform: translateY(-3px) scale(1.07); box-shadow: 0 8px 18px rgba(0,0,0,0.15); }
+    .palette-item:hover .palette-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .palette-tooltip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(5px);
+      background: #1a1a1a;
+      color: #ddd;
+      border-radius: 8px;
+      padding: 6px 10px;
+      white-space: nowrap;
+      font-size: 11px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s, transform 0.15s;
+      z-index: 50;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
+    }
+    .palette-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #1a1a1a;
+    }
+
+    .remove-btn {
+      position: absolute;
+      top: -5px; right: -5px;
+      width: 16px; height: 16px;
+      background: #ef4444;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      color: white;
+      font-weight: bold;
+      z-index: 10;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .palette-item:hover .remove-btn { display: flex; }
+
+    #palette-grid:empty::after {
+      content: 'Click on the image to save colors';
+      display: block;
+      text-align: center;
+      color: #c5bfb7;
+      font-size: 12px;
+      padding: 18px 0;
+      grid-column: 1 / -1;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #a09890;
+    }
+
+    .back-link {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--coral); }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: flex;
+      padding-top: 56px;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes pulse-dot {
+      0%,100% { opacity:1; } 50% { opacity:0.35; }
+    }
+    .live-dot { animation: pulse-dot 1.8s ease infinite; }
+
+    @keyframes copied-flash {
+      0%,100% { background:#f5f2ee; color:#555; }
+      25%,65% { background:#dcfce7; color:#166534; border-color:#86efac; }
+    }
+    .flash-copied { animation: copied-flash 1.4s ease forwards; }
+
+    #placeholder {
+      background: rgba(240,237,232,0.93);
+      backdrop-filter: blur(3px);
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center p-6">
+
+  <div class="w-full max-w-6xl">
+    
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-7">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-stone-900">Color Picker</h1>
+        <p class="mono text-sm text-stone-400 mt-0.5">hover to preview · click to save</p>
+      </div>
+      <a href="index.html" class="back-link">← Back to Home</a>
+      <label id="uploadLabel" class="upload-btn">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+        </svg>
+        Upload Image
+      </label>
+      <input type="file" id="fileInput" accept="image/*" class="hidden"/>
+    </div>
+
+    <div class="flex gap-7">
+
+      <!-- Left: Canvas -->
+      <div class="flex-1 flex flex-col">
+        <div id="canvasWrap" class="canvas-wrap relative" style="height:480px;">
+          <canvas id="canvas" style="position:absolute;top:0;left:0;"></canvas>
+
+          <!-- Placeholder -->
+          <div id="placeholder" class="absolute inset-0 flex flex-col items-center justify-center z-20 transition-opacity duration-300">
+            <div class="text-5xl mb-4 opacity-40">🖼️</div>
+            <p class="text-base font-semibold text-stone-500">Drop or upload an image</p>
+            <p class="mono text-xs text-stone-400 mt-1">JPG · PNG · WebP</p>
+          </div>
+
+          <!-- Magnifier -->
+          <div id="lens" class="hidden absolute w-36 h-36 rounded-full overflow-hidden pointer-events-none z-30 border-4 border-white">
+            <canvas id="zoomCanvas" width="144" height="144" class="w-full h-full"></canvas>
+          </div>
+        </div>
+
+        <!-- Hints -->
+        <div class="mt-2.5 flex gap-5 px-1">
+          <span class="mono text-xs text-stone-400">⊕ hover → preview</span>
+          <span class="mono text-xs text-stone-400">🖱 click → add to palette</span>
+          <span class="mono text-xs text-stone-400">✕ hover swatch → remove</span>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="w-80 flex flex-col gap-4">
+
+        <!-- Live Preview -->
+        <div class="card p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="live-dot w-2 h-2 rounded-full bg-emerald-500"></div>
+            <span class="section-label">Live Preview</span>
+          </div>
+
+          <div id="colorSwatch"
+               class="w-full h-24 rounded-xl mb-4 transition-all duration-100"
+               style="background:#F5F5F5; border:1px solid rgba(0,0,0,0.07); box-shadow:inset 0 1px 4px rgba(0,0,0,0.05);"></div>
+
+          <div class="space-y-3">
+            <div>
+              <div class="section-label mb-1.5">HEX</div>
+              <div class="flex items-center gap-2">
+                <div id="hexText" class="mono text-2xl font-bold text-stone-900 flex-1">#F5F5F5</div>
+                <button id="copyBtn" class="copy-btn">
+                  <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2"/>
+                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/>
+                  </svg>
+                  Copy
+                </button>
+              </div>
+            </div>
+
+            <div class="border-t border-stone-100 pt-3 space-y-2.5">
+              <div>
+                <div class="section-label mb-1">RGB</div>
+                <div id="rgbText" class="mono text-sm text-stone-600">rgb(245, 245, 245)</div>
+              </div>
+              <div>
+                <div class="section-label mb-1">HSL</div>
+                <div id="hslText" class="mono text-sm text-stone-600">hsl(0, 0%, 96%)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Palette -->
+        <div class="card p-5 flex-1">
+          <div class="flex items-center justify-between mb-4">
+            <span class="section-label">Saved Palette</span>
+            <div class="flex items-center gap-3">
+              <span id="paletteCount" class="mono text-xs text-stone-400">0 colors</span>
+              <button id="clearBtn" class="hidden mono text-xs text-stone-400 hover:text-red-500 transition-colors">clear</button>
+            </div>
+          </div>
+          <div id="palette-grid" class="grid grid-cols-5 gap-2 min-h-[80px]"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas      = document.getElementById('canvas')
+    const ctx         = canvas.getContext('2d', { willReadFrequently: true })
+    const zoomCanvas  = document.getElementById('zoomCanvas')
+    const zoomCtx     = zoomCanvas.getContext('2d')
+    const lens        = document.getElementById('lens')
+    const colorSwatch = document.getElementById('colorSwatch')
+    const canvasWrap  = document.getElementById('canvasWrap')
+    const hexText     = document.getElementById('hexText')
+    const rgbText     = document.getElementById('rgbText')
+    const hslText     = document.getElementById('hslText')
+    const copyBtn     = document.getElementById('copyBtn')
+    const fileInput   = document.getElementById('fileInput')
+    const placeholder = document.getElementById('placeholder')
+    const paletteGrid = document.getElementById('palette-grid')
+    const clearBtn    = document.getElementById('clearBtn')
+    const paletteCount= document.getElementById('paletteCount')
+
+    const ZOOM   = 144
+    const SCALE  = 7
+    const SAMPLE = ZOOM / SCALE
+
+    let hasImage = false
+    let canvasW = 0, canvasH = 0
+    let imgOffX = 0, imgOffY = 0, imgDrawW = 0, imgDrawH = 0
+    let palette = []
+
+    // ── Color helpers ─────────────────────────────
+    function rgbToHex(r, g, b) {
+      return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('').toUpperCase()
+    }
+
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255
+      const max = Math.max(r,g,b), min = Math.min(r,g,b)
+      let h, s, l = (max + min) / 2
+      if (max === min) { h = s = 0 }
+      else {
+        const d = max - min
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+        switch(max) {
+          case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break
+          case g: h = ((b - r) / d + 2) / 6; break
+          case b: h = ((r - g) / d + 4) / 6; break
+        }
+      }
+      return `hsl(${Math.round(h*360)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`
+    }
+
+    // ── Preview ───────────────────────────────────
+    function updatePreview(r, g, b) {
+      const hex = rgbToHex(r, g, b)
+      colorSwatch.style.background = `rgb(${r},${g},${b})`
+      hexText.textContent = hex
+      rgbText.textContent = `rgb(${r}, ${g}, ${b})`
+      hslText.textContent = rgbToHsl(r, g, b)
+    }
+
+    // ── Palette ───────────────────────────────────
+    function addToPalette(r, g, b) {
+      const hex = rgbToHex(r, g, b)
+      if (palette.some(p => p.hex === hex)) return
+      palette.push({ r, g, b, hex })
+      renderPalette()
+      colorSwatch.style.transform = 'scale(1.04)'
+      setTimeout(() => colorSwatch.style.transform = '', 180)
+    }
+
+    function removePaletteItem(i) {
+      palette.splice(i, 1)
+      renderPalette()
+    }
+
+    function renderPalette() {
+      paletteGrid.innerHTML = ''
+      paletteCount.textContent = `${palette.length} color${palette.length !== 1 ? 's' : ''}`
+      clearBtn.classList.toggle('hidden', palette.length === 0)
+
+      palette.forEach(({ r, g, b, hex }, i) => {
+        const item = document.createElement('div')
+        item.className = 'palette-item'
+        item.style.cssText = `width:44px;height:44px;border-radius:10px;background:${hex};border:1.5px solid rgba(0,0,0,0.09);box-shadow:0 2px 6px rgba(0,0,0,0.1);`
+
+        const tip = document.createElement('div')
+        tip.className = 'palette-tooltip'
+        tip.innerHTML = `<span style="color:#888">HEX</span> ${hex}<br><span style="color:#888">RGB</span> ${r}, ${g}, ${b}`
+        item.appendChild(tip)
+
+        const rm = document.createElement('div')
+        rm.className = 'remove-btn'
+        rm.innerHTML = '✕'
+        rm.onclick = e => { e.stopPropagation(); removePaletteItem(i) }
+        item.appendChild(rm)
+
+        item.onclick = () => {
+          updatePreview(r, g, b)
+          navigator.clipboard.writeText(hex).catch(() => {})
+        }
+
+        paletteGrid.appendChild(item)
+      })
+    }
+
+    // ── Magnifier ─────────────────────────────────
+    function drawZoom(x, y) {
+      zoomCtx.clearRect(0, 0, ZOOM, ZOOM)
+      const sx = Math.max(0, Math.min(x - SAMPLE/2, canvasW - SAMPLE))
+      const sy = Math.max(0, Math.min(y - SAMPLE/2, canvasH - SAMPLE))
+      zoomCtx.imageSmoothingEnabled = false
+      zoomCtx.drawImage(canvas, sx, sy, SAMPLE, SAMPLE, 0, 0, ZOOM, ZOOM)
+
+      const c = ZOOM / 2
+      zoomCtx.strokeStyle = 'rgba(255,255,255,0.95)'
+      zoomCtx.lineWidth = 1.5
+      zoomCtx.beginPath()
+      zoomCtx.moveTo(c, c-12); zoomCtx.lineTo(c, c+12)
+      zoomCtx.moveTo(c-12, c); zoomCtx.lineTo(c+12, c)
+      zoomCtx.stroke()
+
+      zoomCtx.strokeStyle = 'rgba(20,20,20,0.55)'
+      zoomCtx.lineWidth = 1
+      zoomCtx.beginPath()
+      zoomCtx.arc(c, c, 18, 0, Math.PI * 2)
+      zoomCtx.stroke()
+    }
+
+    function positionLens(mx, my) {
+      let lx = mx + 52
+      let ly = my - ZOOM / 2
+      if (mx > canvasW - 230) lx = mx - ZOOM - 52
+      ly = Math.max(8, Math.min(ly, canvasH - ZOOM - 8))
+      lens.style.left = lx + 'px'
+      lens.style.top  = ly + 'px'
+    }
+
+    // ── Mouse events ──────────────────────────────
+    canvas.onmousemove = (e) => {
+      if (!hasImage) return
+      const rect = canvas.getBoundingClientRect()
+      const cx = e.clientX - rect.left
+      const cy = e.clientY - rect.top
+
+      if (cx < 0 || cx >= canvasW || cy < 0 || cy >= canvasH) {
+        lens.classList.add('hidden'); return
+      }
+
+      if (cx >= imgOffX && cx < imgOffX + imgDrawW && cy >= imgOffY && cy < imgOffY + imgDrawH) {
+        const px = ctx.getImageData(Math.floor(cx), Math.floor(cy), 1, 1).data
+        updatePreview(px[0], px[1], px[2])
+      }
+      drawZoom(cx, cy)
+      positionLens(cx, cy)
+      lens.classList.remove('hidden')
+    }
+
+    canvas.onmouseleave = () => lens.classList.add('hidden')
+
+    canvas.onclick = (e) => {
+      if (!hasImage) return
+      const rect = canvas.getBoundingClientRect()
+      const cx = e.clientX - rect.left
+      const cy = e.clientY - rect.top
+      if (cx < imgOffX || cx >= imgOffX + imgDrawW || cy < imgOffY || cy >= imgOffY + imgDrawH) return
+      const px = ctx.getImageData(Math.floor(cx), Math.floor(cy), 1, 1).data
+      addToPalette(px[0], px[1], px[2])
+    }
+
+    // ── Copy ──────────────────────────────────────
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(hexText.textContent).then(() => {
+        const orig = copyBtn.innerHTML
+        copyBtn.textContent = '✓ Copied'
+        copyBtn.classList.add('flash-copied')
+        setTimeout(() => {
+          copyBtn.classList.remove('flash-copied')
+          copyBtn.innerHTML = orig
+        }, 1400)
+      })
+    }
+
+    clearBtn.onclick = () => { palette = []; renderPalette() }
+
+    // ── Load image ────────────────────────────────
+    function loadImage(file) {
+      const reader = new FileReader()
+      reader.onload = e => {
+        const img = new Image()
+        img.onload = () => {
+          // Canvas px = container px → 1:1, no scaling distortion
+          canvasW = canvasWrap.clientWidth
+          canvasH = canvasWrap.clientHeight
+          canvas.width  = canvasW
+          canvas.height = canvasH
+          canvas.style.width  = canvasW + 'px'
+          canvas.style.height = canvasH + 'px'
+
+          const scale = Math.min(canvasW / img.width, canvasH / img.height)
+          imgDrawW = Math.round(img.width  * scale)
+          imgDrawH = Math.round(img.height * scale)
+          imgOffX  = Math.round((canvasW - imgDrawW) / 2)
+          imgOffY  = Math.round((canvasH - imgDrawH) / 2)
+
+          ctx.clearRect(0, 0, canvasW, canvasH)
+          ctx.drawImage(img, imgOffX, imgOffY, imgDrawW, imgDrawH)
+
+          hasImage = true
+          canvas.style.cursor = 'crosshair'
+          placeholder.style.opacity = '0'
+          setTimeout(() => placeholder.style.display = 'none', 300)
+          updatePreview(200, 200, 200)
+        }
+        img.src = e.target.result
+      }
+      reader.readAsDataURL(file)
+    }
+
+    document.getElementById('uploadLabel').onclick = () => fileInput.click()
+    fileInput.onchange = e => { if (e.target.files[0]) loadImage(e.target.files[0]) }
+
+    canvasWrap.ondragover  = e => { e.preventDefault(); canvasWrap.style.borderColor = '#1a1a1a' }
+    canvasWrap.ondragleave = () => canvasWrap.style.borderColor = ''
+    canvasWrap.ondrop      = e => {
+      e.preventDefault(); canvasWrap.style.borderColor = ''
+      if (e.dataTransfer.files[0]) loadImage(e.dataTransfer.files[0])
+    }
+
+    updatePreview(245, 245, 245)
+    renderPalette()
+  </script>
+</body>
+</html>

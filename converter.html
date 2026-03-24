@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Converter — Colours</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream:#FFFBF5; --cream2:#FFF6E8; --warm:#FDF0DC; --sand:#F5E6CC;
+      --ink:#1C1410; --ink2:#3D2E22; --muted:#8A7060;
+      --border:#EAD9C4; --border2:#DFC9AE;
+      --coral:#FF6B4A; --teal:#2ABFBF; --violet:#7C5CBF;
+      --gold:#F0A500; --rose:#E8637A; --sage:#5A9E6F;
+      --shadow-sm:0 2px 8px rgba(60,30,10,0.07);
+      --shadow-md:0 6px 24px rgba(60,30,10,0.10);
+      --shadow-lg:0 16px 48px rgba(60,30,10,0.13);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;min-height:100vh}
+    body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,rgba(0,0,0,0.2) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.9rem 0;background:rgba(255,251,245,.93);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1300px;margin:0 auto;padding:0 2rem}
+    .logo{display:flex;align-items:center;gap:.55rem;font-family:'Fraunces',serif;font-weight:700;font-size:1.4rem;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+    .logo-swatches{display:flex;align-items:center;gap:4px}
+    .logo-swatch{display:block;width:9px;height:9px;border-radius:3px;animation:swatchBounce 2.4s ease-in-out infinite}
+    .logo-swatch:nth-child(1){background:#FF6B4A;animation-delay:0s}
+    .logo-swatch:nth-child(2){background:#2ABFBF;animation-delay:.15s}
+    .logo-swatch:nth-child(3){background:#7C5CBF;animation-delay:.3s}
+    .logo-swatch:nth-child(4){background:#F0A500;animation-delay:.45s}
+    @keyframes swatchBounce{0%,60%,100%{transform:translateY(0) scale(1);border-radius:3px}30%{transform:translateY(-6px) scale(1.2);border-radius:50%}}
+    .logo-text{background:linear-gradient(90deg,var(--ink) 0%,var(--coral) 35%,var(--violet) 65%,var(--ink) 100%);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:logoShimmer 4s linear infinite}
+    @keyframes logoShimmer{0%{background-position:250% center}100%{background-position:-250% center}}
+    .nav-back{padding:.48rem 1.1rem;background:transparent;border:1.5px solid var(--border2);border-radius:100px;color:var(--ink2);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none}
+    .nav-back:hover{background:var(--warm);border-color:var(--coral);color:var(--coral)}
+
+    /* BLOBS */
+    .bg-blob{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;opacity:.38;z-index:0}
+    .bg-blob-1{width:520px;height:520px;background:#FFD4C2;top:-120px;right:-140px;animation:bFloat 10s ease-in-out infinite alternate}
+    .bg-blob-2{width:360px;height:360px;background:#C2F0EE;bottom:-60px;left:-90px;animation:bFloat 13s ease-in-out infinite alternate-reverse}
+    .bg-blob-3{width:260px;height:260px;background:#E0D5FF;top:45%;left:45%;animation:bFloat 8s ease-in-out infinite alternate}
+    @keyframes bFloat{from{transform:translate(0,0) scale(1)}to{transform:translate(22px,18px) scale(1.05)}}
+
+    /* PAGE */
+    .page-wrap{position:relative;z-index:1;padding:6.5rem 1.5rem 3rem;min-height:100vh;max-width:1300px;margin:0 auto}
+    .page-header{text-align:center;margin-bottom:2.5rem;animation:fadeUp .55s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+    .page-title{font-family:'Fraunces',serif;font-size:clamp(2.2rem,4.5vw,3.4rem);font-weight:700;line-height:1.1;letter-spacing:-.03em;color:var(--ink);margin-bottom:.6rem}
+    .page-title .accent{background:linear-gradient(135deg,var(--coral),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .page-desc{font-size:1rem;color:var(--muted);max-width:460px;margin:0 auto;font-weight:400}
+
+    /* TWO-COLUMN */
+    .conv-layout{display:grid;grid-template-columns:300px 1fr;gap:1.5rem;align-items:start;animation:fadeUp .6s .1s ease both}
+
+    /* LEFT */
+    .left-panel{display:flex;flex-direction:column;gap:1rem}
+    .swatch-card{background:rgba(255,251,245,.78);backdrop-filter:blur(20px);border:1.5px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:var(--shadow-md),0 0 0 1px rgba(255,255,255,.55) inset;position:relative}
+    .swatch-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .big-swatch{width:100%;height:190px;background:#FF6B4A;transition:background .25s ease;position:relative}
+    .big-swatch::after{content:'';position:absolute;inset:0;background:linear-gradient(155deg,rgba(255,255,255,.2) 0%,transparent 55%)}
+    .swatch-bottom{padding:1.1rem 1.3rem 1.3rem}
+    .swatch-hex-label{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem}
+    .swatch-hex-value{font-family:'Space Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1;margin-bottom:.9rem}
+    .picker-row{display:flex;align-items:center;gap:.7rem}
+    .picker-btn-wrap{position:relative;width:40px;height:40px;border-radius:11px;overflow:hidden;border:2px solid var(--border2);cursor:pointer;transition:all .2s;flex-shrink:0;box-shadow:var(--shadow-sm)}
+    .picker-btn-wrap:hover{transform:scale(1.1);border-color:var(--coral)}
+    .picker-btn-wrap input[type=color]{position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);border:none;padding:0;cursor:pointer;opacity:0}
+    .picker-btn-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--warm);pointer-events:none}
+    .picker-hint{font-size:.76rem;color:var(--muted);font-weight:500;line-height:1.35}
+
+    /* PALETTE */
+    .palette-card{background:rgba(255,251,245,.78);backdrop-filter:blur(20px);border:1.5px solid var(--border);border-radius:20px;padding:1.1rem 1.3rem;box-shadow:var(--shadow-sm),0 0 0 1px rgba(255,255,255,.55) inset}
+    .palette-card-label{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+    .palette-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:.45rem}
+    .palette-swatch{height:36px;border-radius:9px;border:1.5px solid rgba(0,0,0,.07);cursor:pointer;transition:transform .18s,box-shadow .18s}
+    .palette-swatch:hover{transform:translateY(-3px) scale(1.08);box-shadow:0 6px 16px rgba(0,0,0,.18);z-index:2}
+    .palette-swatch.active-swatch{outline:2.5px solid var(--ink);outline-offset:2px}
+    .reset-btn{width:100%;padding:.6rem 1rem;background:transparent;border:1.5px solid var(--border2);border-radius:13px;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
+    .reset-btn:hover{border-color:var(--coral);color:var(--coral);background:rgba(255,107,74,.04)}
+
+    /* RIGHT */
+    .right-panel{display:flex;flex-direction:column;gap:1rem}
+    .formats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .format-item{background:rgba(255,251,245,.78);backdrop-filter:blur(20px);border:1.5px solid var(--border);border-radius:20px;padding:1.05rem 1.15rem 1rem;box-shadow:var(--shadow-sm),0 0 0 1px rgba(255,255,255,.55) inset;transition:all .2s}
+    .format-item:hover{border-color:var(--border2);box-shadow:var(--shadow-md)}
+    .format-item.active-input{border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,191,.1),var(--shadow-sm);animation:glowFlash .4s ease}
+    @keyframes glowFlash{0%{box-shadow:0 0 0 0 rgba(124,92,191,.35),var(--shadow-sm)}100%{box-shadow:0 0 0 7px rgba(124,92,191,0),var(--shadow-sm)}}
+    .format-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem}
+    .format-tag{font-size:.62rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;background:linear-gradient(135deg,var(--coral),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .copy-btn{display:flex;align-items:center;gap:.28rem;background:var(--warm);border:1px solid var(--border2);border-radius:8px;padding:.2rem .58rem;font-family:'Outfit',sans-serif;font-size:.67rem;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+    .copy-btn:hover{background:var(--sand);border-color:var(--coral);color:var(--coral)}
+    .copy-btn.copied{background:var(--sage);border-color:var(--sage);color:#fff;animation:copyPop .3s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes copyPop{0%{transform:scale(.88)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+    .format-input{width:100%;padding:.52rem .7rem;background:var(--cream2);border:1.5px solid var(--border);border-radius:10px;font-family:'Space Mono',monospace;font-size:.76rem;font-weight:400;color:var(--ink);outline:none;transition:all .2s;margin-bottom:.35rem}
+    .format-input:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,191,.08)}
+    .format-input.error{border-color:var(--rose);animation:shake .35s ease}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-3px)}40%,80%{transform:translateX(3px)}}
+    .error-hint{font-size:.67rem;color:var(--rose);font-weight:600;min-height:1rem}
+
+    /* CMYK */
+    .cmyk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;margin-bottom:.35rem}
+    .cmyk-sub{display:flex;flex-direction:column;gap:.2rem}
+    .cmyk-label{font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:center}
+    .cmyk-input{width:100%;padding:.44rem .25rem;background:var(--cream2);border:1.5px solid var(--border);border-radius:8px;font-family:'Space Mono',monospace;font-size:.76rem;color:var(--ink);outline:none;text-align:center;transition:all .2s;-moz-appearance:textfield}
+    .cmyk-input::-webkit-outer-spin-button,.cmyk-input::-webkit-inner-spin-button{-webkit-appearance:none}
+    .cmyk-input:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,92,191,.08)}
+
+    /* RESPONSIVE */
+    @media(max-width:920px){.conv-layout{grid-template-columns:1fr}.left-panel{flex-direction:row;flex-wrap:wrap;gap:1rem}.swatch-card{flex:1;min-width:240px}.palette-card{flex:1;min-width:200px}.big-swatch{height:130px}}
+    @media(max-width:650px){.formats-row{grid-template-columns:1fr 1fr}.left-panel{flex-direction:column}.swatch-hex-value{font-size:1.5rem}}
+    @media(max-width:430px){.formats-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
+  <div class="bg-blob bg-blob-3"></div>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-swatches">
+          <div class="logo-swatch"></div><div class="logo-swatch"></div>
+          <div class="logo-swatch"></div><div class="logo-swatch"></div>
+        </div>
+        <span class="logo-text">Colours</span>
+      </a>
+      <a href="index.html" class="nav-back">← Back to Home</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="page-header">
+      <h1 class="page-title">Color <span class="accent">Converter</span></h1>
+      <p class="page-desc">Type any format and watch every other update instantly — HEX, RGB, HSL, RGBA, HSLA &amp; CMYK.</p>
+    </div>
+
+    <div class="conv-layout">
+      <!-- LEFT -->
+      <div class="left-panel">
+        <div class="swatch-card">
+          <div class="big-swatch" id="bigSwatch"></div>
+          <div class="swatch-bottom">
+            <div class="swatch-hex-label">Current Color</div>
+            <div class="swatch-hex-value" id="swatchHexValue">#FF6B4A</div>
+            <div class="picker-row">
+              <div class="picker-btn-wrap">
+                <div class="picker-btn-icon">🎨</div>
+                <input type="color" id="nativePicker" value="#FF6B4A" />
+              </div>
+              <span class="picker-hint">Click to open<br>color picker</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="palette-card">
+          <div class="palette-card-label">Quick Palette</div>
+          <div class="palette-strip" id="paletteStrip"></div>
+        </div>
+
+        <button class="reset-btn" onclick="resetToDefault()">↺ Reset to Default</button>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right-panel">
+        <!-- Row 1 -->
+        <div class="formats-row">
+          <div class="format-item" id="block-hex">
+            <div class="format-header"><span class="format-tag">HEX</span><button class="copy-btn" onclick="copyFormat('hex')" id="copy-hex">⎘ Copy</button></div>
+            <input class="format-input" id="inp-hex" type="text" value="#FF6B4A" placeholder="#RRGGBB" maxlength="9" />
+            <div class="error-hint" id="err-hex"></div>
+          </div>
+          <div class="format-item" id="block-rgb">
+            <div class="format-header"><span class="format-tag">RGB</span><button class="copy-btn" onclick="copyFormat('rgb')" id="copy-rgb">⎘ Copy</button></div>
+            <input class="format-input" id="inp-rgb" type="text" value="rgb(255, 107, 74)" placeholder="rgb(R, G, B)" />
+            <div class="error-hint" id="err-rgb"></div>
+          </div>
+          <div class="format-item" id="block-hsl">
+            <div class="format-header"><span class="format-tag">HSL</span><button class="copy-btn" onclick="copyFormat('hsl')" id="copy-hsl">⎘ Copy</button></div>
+            <input class="format-input" id="inp-hsl" type="text" value="hsl(11, 100%, 65%)" placeholder="hsl(H, S%, L%)" />
+            <div class="error-hint" id="err-hsl"></div>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="formats-row">
+          <div class="format-item" id="block-rgba">
+            <div class="format-header"><span class="format-tag">RGBA</span><button class="copy-btn" onclick="copyFormat('rgba')" id="copy-rgba">⎘ Copy</button></div>
+            <input class="format-input" id="inp-rgba" type="text" value="rgba(255, 107, 74, 1)" placeholder="rgba(R, G, B, A)" />
+            <div class="error-hint" id="err-rgba"></div>
+          </div>
+          <div class="format-item" id="block-hsla">
+            <div class="format-header"><span class="format-tag">HSLA</span><button class="copy-btn" onclick="copyFormat('hsla')" id="copy-hsla">⎘ Copy</button></div>
+            <input class="format-input" id="inp-hsla" type="text" value="hsla(11, 100%, 65%, 1)" placeholder="hsla(H, S%, L%, A)" />
+            <div class="error-hint" id="err-hsla"></div>
+          </div>
+          <div class="format-item" id="block-cmyk">
+            <div class="format-header"><span class="format-tag">CMYK</span><button class="copy-btn" onclick="copyFormat('cmyk')" id="copy-cmyk">⎘ Copy</button></div>
+            <div class="cmyk-grid">
+              <div class="cmyk-sub"><div class="cmyk-label">C</div><input class="cmyk-input" id="inp-c" type="number" min="0" max="100" value="0" /></div>
+              <div class="cmyk-sub"><div class="cmyk-label">M</div><input class="cmyk-input" id="inp-m" type="number" min="0" max="100" value="58" /></div>
+              <div class="cmyk-sub"><div class="cmyk-label">Y</div><input class="cmyk-input" id="inp-y" type="number" min="0" max="100" value="71" /></div>
+              <div class="cmyk-sub"><div class="cmyk-label">K</div><input class="cmyk-input" id="inp-k" type="number" min="0" max="100" value="0" /></div>
+            </div>
+            <div class="error-hint" id="err-cmyk"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentRGB={r:255,g:107,b:74,a:1},updating=false;
+    const quickPalette=['#FF6B4A','#F0A500','#2ABFBF','#7C5CBF','#E8637A','#5A9E6F','#1C1410','#FFFBF5','#3D2E22','#D4A96A','#0077B6','#C9184A'];
+    const strip=document.getElementById('paletteStrip');
+    quickPalette.forEach((color,i)=>{
+      const sw=document.createElement('div');
+      sw.className='palette-swatch'+(i===0?' active-swatch':'');
+      sw.style.background=color; sw.title=color;
+      sw.addEventListener('click',()=>{
+        document.querySelectorAll('.palette-swatch').forEach(s=>s.classList.remove('active-swatch'));
+        sw.classList.add('active-swatch');
+        const rgb=hexToRgb(color);
+        if(rgb){currentRGB={...rgb,a:1};updateAll(null);}
+      });
+      strip.appendChild(sw);
+    });
+
+    function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+    function rgbToHex(r,g,b){return'#'+[r,g,b].map(v=>clamp(Math.round(v),0,255).toString(16).padStart(2,'0')).join('').toUpperCase()}
+    function hexToRgb(hex){
+      hex=hex.replace(/^#/,'');
+      if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');
+      if(hex.length!==6)return null;
+      const n=parseInt(hex,16);
+      if(isNaN(n))return null;
+      return{r:(n>>16)&255,g:(n>>8)&255,b:n&255};
+    }
+    function rgbToHsl(r,g,b){
+      r/=255;g/=255;b/=255;
+      const max=Math.max(r,g,b),min=Math.min(r,g,b);
+      let h,s,l=(max+min)/2;
+      if(max===min){h=s=0;}
+      else{
+        const d=max-min;
+        s=l>.5?d/(2-max-min):d/(max+min);
+        switch(max){
+          case r:h=((g-b)/d+(g<b?6:0))/6;break;
+          case g:h=((b-r)/d+2)/6;break;
+          case b:h=((r-g)/d+4)/6;break;
+        }
+      }
+      return{h:Math.round(h*360),s:Math.round(s*100),l:Math.round(l*100)};
+    }
+    function hslToRgb(h,s,l){
+      h/=360;s/=100;l/=100;
+      if(s===0){const v=Math.round(l*255);return{r:v,g:v,b:v};}
+      const hue2rgb=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;};
+      const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;
+      return{r:Math.round(hue2rgb(p,q,h+1/3)*255),g:Math.round(hue2rgb(p,q,h)*255),b:Math.round(hue2rgb(p,q,h-1/3)*255)};
+    }
+    function rgbToCmyk(r,g,b){
+      r/=255;g/=255;b/=255;
+      const k=1-Math.max(r,g,b);
+      if(k===1)return{c:0,m:0,y:0,k:100};
+      return{c:Math.round((1-r-k)/(1-k)*100),m:Math.round((1-g-k)/(1-k)*100),y:Math.round((1-b-k)/(1-k)*100),k:Math.round(k*100)};
+    }
+    function cmykToRgb(c,m,y,k){
+      c/=100;m/=100;y/=100;k/=100;
+      return{r:Math.round(255*(1-c)*(1-k)),g:Math.round(255*(1-m)*(1-k)),b:Math.round(255*(1-y)*(1-k))};
+    }
+    function parseRgb(str){
+      const m=str.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)/i);
+      if(!m)return null;
+      const r=+m[1],g=+m[2],b=+m[3],a=m[4]!==undefined?+m[4]:1;
+      if([r,g,b].some(v=>v<0||v>255)||a<0||a>1)return null;
+      return{r,g,b,a};
+    }
+    function parseHsl(str){
+      const m=str.match(/hsla?\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*(?:,\s*([\d.]+))?\s*\)/i);
+      if(!m)return null;
+      const h=+m[1],s=+m[2],l=+m[3],a=m[4]!==undefined?+m[4]:1;
+      if(h<0||h>360||s<0||s>100||l<0||l>100||a<0||a>1)return null;
+      return{h,s,l,a};
+    }
+    function updateAll(skip){
+      if(updating)return; updating=true;
+      const{r,g,b,a}=currentRGB;
+      const hex=rgbToHex(r,g,b),hsl=rgbToHsl(r,g,b),cmyk=rgbToCmyk(r,g,b);
+      const sc=a<1?`rgba(${r},${g},${b},${a})`:hex;
+      document.getElementById('bigSwatch').style.background=sc;
+      document.getElementById('swatchHexValue').textContent=hex;
+      document.getElementById('nativePicker').value=hex;
+      if(skip!=='hex') document.getElementById('inp-hex').value=hex;
+      if(skip!=='rgb') document.getElementById('inp-rgb').value=`rgb(${r}, ${g}, ${b})`;
+      if(skip!=='hsl') document.getElementById('inp-hsl').value=`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+      if(skip!=='rgba')document.getElementById('inp-rgba').value=`rgba(${r}, ${g}, ${b}, ${a})`;
+      if(skip!=='hsla')document.getElementById('inp-hsla').value=`hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, ${a})`;
+      if(skip!=='cmyk'){document.getElementById('inp-c').value=cmyk.c;document.getElementById('inp-m').value=cmyk.m;document.getElementById('inp-y').value=cmyk.y;document.getElementById('inp-k').value=cmyk.k;}
+      ['hex','rgb','hsl','rgba','hsla','cmyk'].forEach(f=>{
+        document.getElementById('err-'+f).textContent='';
+        const inp=document.getElementById('inp-'+(f==='cmyk'?'c':f));
+        if(inp)inp.classList.remove('error');
+      });
+      updating=false;
+    }
+    function flashBlock(field){const b=document.getElementById('block-'+field);if(!b)return;b.classList.add('active-input');setTimeout(()=>b.classList.remove('active-input'),450);}
+    function setError(field,msg){document.getElementById('err-'+field).textContent=msg;const inp=document.getElementById('inp-'+(field==='cmyk'?'c':field));if(inp){inp.classList.add('error');setTimeout(()=>inp.classList.remove('error'),600);}flashBlock(field);}
+
+    document.getElementById('inp-hex').addEventListener('input',function(){
+      flashBlock('hex');let v=this.value.trim();if(!v.startsWith('#'))v='#'+v;
+      const rgb=hexToRgb(v);if(!rgb){setError('hex','Invalid — e.g. #FF6B4A');return;}
+      currentRGB={...rgb,a:currentRGB.a};updateAll('hex');
+    });
+    document.getElementById('inp-rgb').addEventListener('input',function(){
+      flashBlock('rgb');const p=parseRgb(this.value.trim());
+      if(!p){setError('rgb','Invalid — e.g. rgb(255, 107, 74)');return;}
+      currentRGB={...p,a:currentRGB.a};updateAll('rgb');
+    });
+    document.getElementById('inp-hsl').addEventListener('input',function(){
+      flashBlock('hsl');const p=parseHsl(this.value.trim());
+      if(!p){setError('hsl','Invalid — e.g. hsl(11, 100%, 65%)');return;}
+      currentRGB={...hslToRgb(p.h,p.s,p.l),a:currentRGB.a};updateAll('hsl');
+    });
+    document.getElementById('inp-rgba').addEventListener('input',function(){
+      flashBlock('rgba');const p=parseRgb(this.value.trim());
+      if(!p){setError('rgba','Invalid — e.g. rgba(255, 107, 74, 1)');return;}
+      currentRGB=p;updateAll('rgba');
+    });
+    document.getElementById('inp-hsla').addEventListener('input',function(){
+      flashBlock('hsla');const p=parseHsl(this.value.trim());
+      if(!p){setError('hsla','Invalid — e.g. hsla(11, 100%, 65%, 1)');return;}
+      currentRGB={...hslToRgb(p.h,p.s,p.l),a:p.a};updateAll('hsla');
+    });
+    ['c','m','y','k'].forEach(ch=>{
+      document.getElementById('inp-'+ch).addEventListener('input',function(){
+        flashBlock('cmyk');
+        const c=+document.getElementById('inp-c').value,m=+document.getElementById('inp-m').value;
+        const y=+document.getElementById('inp-y').value,k=+document.getElementById('inp-k').value;
+        if([c,m,y,k].some(v=>isNaN(v)||v<0||v>100)){setError('cmyk','Values must be 0–100');return;}
+        currentRGB={...cmykToRgb(c,m,y,k),a:currentRGB.a};updateAll('cmyk');
+      });
+    });
+    document.getElementById('nativePicker').addEventListener('input',function(){
+      const rgb=hexToRgb(this.value);if(!rgb)return;
+      currentRGB={...rgb,a:currentRGB.a};
+      document.querySelectorAll('.palette-swatch').forEach(s=>s.classList.remove('active-swatch'));
+      updateAll(null);
+    });
+    function copyFormat(format){
+      let text='';
+      if(format==='hex') text=document.getElementById('inp-hex').value;
+      if(format==='rgb') text=document.getElementById('inp-rgb').value;
+      if(format==='hsl') text=document.getElementById('inp-hsl').value;
+      if(format==='rgba')text=document.getElementById('inp-rgba').value;
+      if(format==='hsla')text=document.getElementById('inp-hsla').value;
+      if(format==='cmyk')text=`cmyk(${document.getElementById('inp-c').value}%, ${document.getElementById('inp-m').value}%, ${document.getElementById('inp-y').value}%, ${document.getElementById('inp-k').value}%)`;
+      navigator.clipboard.writeText(text).then(()=>{
+        const btn=document.getElementById('copy-'+format);
+        btn.textContent='✓ Copied!';btn.classList.add('copied');
+        setTimeout(()=>{btn.textContent='⎘ Copy';btn.classList.remove('copied');},1800);
+      });
+    }
+    function resetToDefault(){
+      currentRGB={r:255,g:107,b:74,a:1};
+      document.querySelectorAll('.palette-swatch').forEach((s,i)=>s.classList.toggle('active-swatch',i===0));
+      updateAll(null);
+    }
+    document.querySelectorAll('.logo').forEach(logo=>{
+      logo.addEventListener('mouseenter',()=>logo.classList.add('is-hovered'));
+      logo.addEventListener('mouseleave',()=>logo.classList.remove('is-hovered'));
+    });
+    updateAll(null);
+  </script>
+</body>
+</html>
