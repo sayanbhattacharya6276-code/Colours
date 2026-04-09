@@ -52,3 +52,21 @@ This project provides essential tools for designers, developers, and creators to
 ---
 
 ## 📂 Project Structure
+
+📁 ByteyBuddy-Colors
+- index.html # Home / Navigation
+- color-picker.html # Color picker tool
+- converter.html # Color conversion tool
+- palettes.html # Color palette collection
+
+
+---
+
+💡 Purpose of This Project
+
+This project was created to:
+
+- Practice **DOM manipulation**
+- Strengthen **JavaScript logic building**
+- Improve **UI/UX design skills**
+- Demonstrate **frontend fundamentals** for portfolio & GitHub
